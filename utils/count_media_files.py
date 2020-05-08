@@ -1,8 +1,6 @@
 import os
 import shutil
 
-otherFileTypes = []
-
 imageExtensions = [".JPG", ".jpg", ".jpeg", ".JPEG", ".png", ".PNG"]
 videoExtensions = [".mp4", ".MP4", ".mov", ".MOV", ".m4v", ".M4V"]
 
@@ -17,17 +15,9 @@ def countFilesRecursively(srcdir, count):
         else:
             if not fileName.startswith('.') and (any(s in fileName for s in imageExtensions) or any(s in fileName for s in videoExtensions)):
                 count = count + 1
-                extn = ""
-            try:
-                extn = fileName.rsplit(".", 1)[1]
-            except:
-                pass
-            if extn not in otherFileTypes:
-                otherFileTypes.append(extn)
     return count
 
 
-src = "/Volumes/MONTUX-2TB"
+src = "F:/California and unsorted pictures"
 count = countFilesRecursively(src, 0)
 print("Total media: " + str(count))
-print(otherFileTypes)
