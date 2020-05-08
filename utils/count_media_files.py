@@ -16,26 +16,9 @@ def countFilesRecursively(srcdir, count):
                 fullFileName, count)
         else:
             if not fileName.startswith('.') and (any(s in fileName for s in imageExtensions) or any(s in fileName for s in videoExtensions)):
-<<<<<<< HEAD
                 fileSize = os.stat(fileName).st_size
                 if(fileSize > fileSizeLowerLimit):
                     count = count + 1
-=======
-<<<<<<<< HEAD:utils/count_media_files.py
-                count = count + 1
-========
-                fileSize = os.stat(fileName).st_size
-                if(fileSize > fileSizeLowerLimit):
-                    count = count + 1
-                extn = ""
-            try:
-                extn = fileName.rsplit(".", 1)[1]
-            except:
-                pass
-            if extn not in otherFileTypes:
-                otherFileTypes.append(extn)
->>>>>>>> 63f4fe45a347e99c11d489f681f112a0642063da:utils/count_files.py
->>>>>>> 63f4fe45a347e99c11d489f681f112a0642063da
     return count
 
 
