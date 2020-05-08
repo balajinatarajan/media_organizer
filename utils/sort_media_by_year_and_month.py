@@ -16,7 +16,7 @@ class MediaType(Enum):
     VIDEO = 2
 
 
-mediaRoot = "F:/ALL_MEDIA/Video/"
+destination = "F:/ALL_MEDIA/Videos/"
 
 
 def getCreationDate(fileName):
@@ -44,7 +44,7 @@ def createDateFoldersAndMoveMedia(dateString, fileName, fullFileName):
     month = re.findall('\d{4}:(\d{2}):\d{2}', dateString)
     if(len(month) == 0):
         month = re.findall('\d{4}-(\d{2})-\d{2}', dateString)
-    newDir = mediaRoot + year[0] + "/" + month[0]
+    newDir = destination + year[0] + "/" + month[0]
     os.makedirs(newDir, exist_ok=True)
     move(fullFileName, os.path.join(newDir, fileName))
     return True
@@ -69,9 +69,10 @@ def organizeMediaByDateFolders(srcdir, mediaType):
                 except Exception as e:
                     errorCount = errorCount + 1
                     #print("Error copying file " + fileName + " with error " + e)
-        if (counter == 20000):
+                    print("Error copying " + fileName)
+        if (counter == 3000):
             break
     print("Total number of errors: " + str(errorCount))
 
 
-organizeMediaByDateFolders("F:/ALL_MEDIA", MediaType.VIDEO)
+organizeMediaByDateFolders("F:/ALL_MEDIA/Videos", MediaType.VIDEO)
