@@ -6,6 +6,8 @@ otherFileTypes = []
 imageExtensions = [".JPG", ".jpg", ".jpeg", ".JPEG", ".png", ".PNG"]
 videoExtensions = [".mp4", ".MP4", ".mov", ".MOV", ".m4v", ".M4V"]
 
+fileSizeLowerLimit = 200
+
 
 def countFilesRecursively(srcdir, count):
     srcFiles = os.listdir(srcdir)
@@ -16,7 +18,9 @@ def countFilesRecursively(srcdir, count):
                 fullFileName, count)
         else:
             if not fileName.startswith('.') and (any(s in fileName for s in imageExtensions) or any(s in fileName for s in videoExtensions)):
-                count = count + 1
+                fileSize = os.stat(fileName).st_size
+                if(fileSize > fileSizeLowerLimit):
+                    count = count + 1
                 extn = ""
             try:
                 extn = fileName.rsplit(".", 1)[1]
