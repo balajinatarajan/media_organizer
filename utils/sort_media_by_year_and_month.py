@@ -17,6 +17,9 @@ class MediaType(Enum):
 
 
 destination = "F:/ALL_MEDIA/Videos/"
+totalFilesToBeProcessed = 1000
+errorCount = 0
+filesCount = 0
 
 
 def getCreationDate(fileName):
@@ -52,25 +55,27 @@ def createDateFoldersAndMoveMedia(dateString, fileName, fullFileName):
 
 def organizeMediaByDateFolders(srcdir, mediaType):
     srcFiles = os.listdir(srcdir)
-    counter = 0
-    errorCount = 0
+    global filesCount
+    global errorCount
     fileExtensions = imageExtensions
     if(mediaType == MediaType.VIDEO):
         fileExtensions = videoExtensions
     for fileName in srcFiles:
         fullFileName = os.path.join(srcdir, fileName)
-        if (not os.path.isdir(fullFileName)):
+        if (os.path.isdir(fullFileName)):
+            organizeMediaByDateFolders(fullFileName, mediaType)
+        else:
             if any(s in fileName for s in fileExtensions) and not fileName.startswith('.'):
                 try:
-                    counter = counter + 1
+                    filesCount = filesCount + 1
                     creationDate = getCreationDate(fullFileName)
                     moveResult = createDateFoldersAndMoveMedia(
                         creationDate, fileName, fullFileName)
                 except Exception as e:
                     errorCount = errorCount + 1
                     #print("Error copying file " + fileName + " with error " + e)
-                    print("Error copying " + fileName)
-        if (counter == 3000):
+                    print("Error copying " + fullFileName)
+        if (filesCount == totalFilesToBeProcessed):
             break
     print("Total number of errors: " + str(errorCount))
 
