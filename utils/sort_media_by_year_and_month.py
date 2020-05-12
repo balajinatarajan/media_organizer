@@ -16,8 +16,9 @@ class MediaType(Enum):
     VIDEO = 2
 
 
-destination = "F:/ALL_MEDIA/Videos/"
-totalFilesToBeProcessed = 1000
+destination = "F:/NewOrganized/Pictures/"
+errorDestination = "F:/NewOrganized/Pictures/erroredimages"
+totalFilesToBeProcessed = 40000
 errorCount = 0
 filesCount = 0
 
@@ -62,22 +63,24 @@ def organizeMediaByDateFolders(srcdir, mediaType):
         fileExtensions = videoExtensions
     for fileName in srcFiles:
         fullFileName = os.path.join(srcdir, fileName)
-        if (os.path.isdir(fullFileName)):
-            organizeMediaByDateFolders(fullFileName, mediaType)
-        else:
-            if any(s in fileName for s in fileExtensions) and not fileName.startswith('.'):
-                try:
-                    filesCount = filesCount + 1
-                    creationDate = getCreationDate(fullFileName)
-                    moveResult = createDateFoldersAndMoveMedia(
-                        creationDate, fileName, fullFileName)
-                except Exception as e:
-                    errorCount = errorCount + 1
-                    #print("Error copying file " + fileName + " with error " + e)
-                    print("Error copying " + fullFileName)
-        if (filesCount == totalFilesToBeProcessed):
-            break
-    print("Total number of errors: " + str(errorCount))
+        if(not fileName.startswith('.')):
+            if (os.path.isdir(fullFileName)):
+                organizeMediaByDateFolders(fullFileName, mediaType)
+            else:
+                if any(s in fileName for s in fileExtensions):
+                    try:
+                        filesCount = filesCount + 1
+                        creationDate = getCreationDate(fullFileName)
+                        moveResult = createDateFoldersAndMoveMedia(
+                            creationDate, fileName, fullFileName)
+                    except Exception as e:
+                        errorCount = errorCount + 1
+                        move(fullFileName, os.path.join(errorDestination, fileName))
+                        #print("Error copying file " + fullFileName + " with error " + str(e))
+                        #print("Error copying " + fullFileName)
+            if (filesCount == totalFilesToBeProcessed):
+                break
 
 
-organizeMediaByDateFolders("F:/ALL_MEDIA/Videos", MediaType.VIDEO)
+organizeMediaByDateFolders("F:/Unsorted", MediaType.IMAGE)
+print("Total number of errors: " + str(errorCount))
