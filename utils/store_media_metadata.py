@@ -65,17 +65,18 @@ def extractMetadata(srcdir, mediaType):
         fileExtensions = videoExtensions
     for fileName in srcFiles:
         fullFileName = os.path.join(srcdir, fileName)
-        if (os.path.isdir(fullFileName)):
-            extractMetadata(fullFileName, mediaType)
-        else:
-            if any(s in fileName for s in fileExtensions) and not fileName.startswith('.'):
-                try:
-                    filesCount = filesCount + 1
-                    storeMetadata(fileName, fullFileName, mediaType)
-                except Exception as e:
-                    errorCount = errorCount + 1
-                    #print("Error copying file " + fileName + " with error " + e)
-                    print("Error extracting metadata " + fullFileName)
+        if(not fileName.startswith('.')):
+            if (os.path.isdir(fullFileName)):
+                extractMetadata(fullFileName, mediaType)
+            else:
+                if any(s in fileName for s in fileExtensions):
+                    try:
+                        filesCount = filesCount + 1
+                        storeMetadata(fileName, fullFileName, mediaType)
+                    except Exception as e:
+                        errorCount = errorCount + 1
+                        #print("Error copying file " + fileName + " with error " + e)
+                        print("Error extracting metadata " + fullFileName)
         if (filesCount == totalFilesToBeProcessed):
             break
     print("Total number of errors: " + str(errorCount))
