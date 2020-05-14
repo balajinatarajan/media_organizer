@@ -4,17 +4,28 @@ create table mediaindex (
   year int,
   month int,
   filename varchar(255),
-  fullfilename varchar(1000),
+  fullfilename varchar(300),
   filesize bigint,
-  filehash varchar(255)
+  filehash varchar(255),
+  PRIMARY KEY (fullfilename)
 );
 -- READ QUERIES
 select
-  *
+  count(*)
 from mediaindex;
+select
+  *
+from mediaindex
+limit
+  1;
+select
+  filename
+from mediaindex
+where
+  fullfilename like 'F:/NewOrganized/Pictures\\\\2013\\\\04\\\\IMG_9842.jpg';
 -- ADD QUERIES
   -- Insert test data
-insert into mediaindex (
+insert ignore into mediaindex (
     source,
     filetype,
     year,
@@ -37,4 +48,4 @@ VALUES
   );
 -- UPDATE QUERIES
   -- DELETE QUERIES
-delete from mediaindex
+delete from mediaindex drop table mediaindex

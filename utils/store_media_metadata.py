@@ -42,14 +42,16 @@ def hashFile(file):
 
 def storeMetadata(fileName, fullFileName, mediaType):
     fileType = "Video" if mediaType == MediaType.VIDEO else "Image"
+    # converting the separator to unix helps with db lookup and regex find
+    fullFileName = fullFileName.replace("\\", "/")
     yearMatch = re.findall(
-        '/(\d{4})/', fullFileName) if os.sep == '/' else re.findall('\\\\(\d{4})\\\\', fullFileName)
+        '/(\d{4})/', fullFileName)
     monthMatch = re.findall(
-        '/(\d{2})/', fullFileName) if os.sep == '/' else re.findall('\\\\(\d{2})\\\\', fullFileName)
+        '/(\d{2})/', fullFileName)
     fileSize = os.stat(fullFileName).st_size
     fileHash = hashFile(fullFileName) if mediaType == MediaType.IMAGE else "NA"
     mycursor = mydb.cursor()
-    sql = "insert into mediaindex (source,filetype,year,month,filename,fullfilename,filesize,filehash) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+    sql = "insert ignore into mediaindex (source,filetype,year,month,filename,fullfilename,filesize,filehash) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
     val = (source, fileType, int(yearMatch[0]), int(
         monthMatch[0]), fileName, fullFileName, int(fileSize), fileHash)
     mycursor.execute(sql, val)
@@ -75,9 +77,10 @@ def extractMetadata(srcdir, mediaType):
                         storeMetadata(fileName, fullFileName, mediaType)
                     except Exception as e:
                         errorCount = errorCount + 1
-                        print("Error extracting metadata " + fileName + " with error " + e)
+                        print("Error extracting metadata " +
+                              fileName + " with error " + e)
                         #print("Error extracting metadata " + fullFileName)
-        if(filesCount%200 == 0):
+        if(filesCount % 200 == 0):
             print("Total files processed: " + str(filesCount))
         if (filesCount == totalFilesToBeProcessed):
             break
