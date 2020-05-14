@@ -18,7 +18,7 @@ class MediaType(Enum):
 
 
 source = "Stage"
-totalFilesToBeProcessed = 1000
+totalFilesToBeProcessed = 100000
 errorCount = 0
 filesCount = 0
 
@@ -43,9 +43,9 @@ def hashFile(file):
 def storeMetadata(fileName, fullFileName, mediaType):
     fileType = "Video" if mediaType == MediaType.VIDEO else "Image"
     yearMatch = re.findall(
-        '/(d{4})/', fullFileName) if os.sep == '/' else re.findall('\\\\(d{4})\\\\', fullFileName)
+        '/(\d{4})/', fullFileName) if os.sep == '/' else re.findall('\\\\(\d{4})\\\\', fullFileName)
     monthMatch = re.findall(
-        '/(d{2})/', fullFileName) if os.sep == '/' else re.findall('\\\\(d{2})\\\\', fullFileName)
+        '/(\d{2})/', fullFileName) if os.sep == '/' else re.findall('\\\\(\d{2})\\\\', fullFileName)
     fileSize = os.stat(fullFileName).st_size
     fileHash = hashFile(fullFileName) if mediaType == MediaType.IMAGE else "NA"
     mycursor = mydb.cursor()
@@ -75,11 +75,13 @@ def extractMetadata(srcdir, mediaType):
                         storeMetadata(fileName, fullFileName, mediaType)
                     except Exception as e:
                         errorCount = errorCount + 1
-                        #print("Error copying file " + fileName + " with error " + e)
-                        print("Error extracting metadata " + fullFileName)
+                        print("Error extracting metadata " + fileName + " with error " + e)
+                        #print("Error extracting metadata " + fullFileName)
+        if(filesCount%200 == 0):
+            print("Total files processed: " + str(filesCount))
         if (filesCount == totalFilesToBeProcessed):
             break
     print("Total number of errors: " + str(errorCount))
 
 
-extractMetadata("F:/ALL_MEDIA/Videos", MediaType.VIDEO)
+extractMetadata("F:/NewOrganized/Pictures", MediaType.IMAGE)
