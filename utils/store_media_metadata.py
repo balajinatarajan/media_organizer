@@ -18,7 +18,7 @@ class MediaType(Enum):
 
 
 source = "Stage"
-totalFilesToBeProcessed = 100000
+totalFilesToBeProcessed = 10
 errorCount = 0
 filesCount = 0
 
@@ -43,9 +43,10 @@ def hashFile(file):
 def isFileProcessed(fullFileName):
     mycursor = mydb.cursor()
     mycursor.execute(
-        "SELECT filename FROM mediaindex WHERE fullfilename = '%s'", fullFileName)
+        "SELECT filename FROM mediaindex WHERE fullfilename = %s", (fullFileName,))
     myresult = mycursor.fetchone()
     if myresult:
+        #print("skipping " + fullFileName)
         return True
     return False
 
