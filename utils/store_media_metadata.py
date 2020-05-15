@@ -40,22 +40,35 @@ def hashFile(file):
     return hashes
 
 
+def isFileProcessed(fullFileName):
+    mycursor = mydb.cursor()
+    mycursor.execute(
+        "SELECT filename FROM mediaindex WHERE fullfilename = '%s'", fullFileName)
+    myresult = mycursor.fetchone()
+    if myresult:
+        return True
+    return False
+
+
 def storeMetadata(fileName, fullFileName, mediaType):
     fileType = "Video" if mediaType == MediaType.VIDEO else "Image"
     # converting the separator to unix helps with db lookup and regex find
     fullFileName = fullFileName.replace("\\", "/")
-    yearMatch = re.findall(
-        '/(\d{4})/', fullFileName)
-    monthMatch = re.findall(
-        '/(\d{2})/', fullFileName)
-    fileSize = os.stat(fullFileName).st_size
-    fileHash = hashFile(fullFileName) if mediaType == MediaType.IMAGE else "NA"
-    mycursor = mydb.cursor()
-    sql = "insert ignore into mediaindex (source,filetype,year,month,filename,fullfilename,filesize,filehash) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-    val = (source, fileType, int(yearMatch[0]), int(
-        monthMatch[0]), fileName, fullFileName, int(fileSize), fileHash)
-    mycursor.execute(sql, val)
-    mydb.commit()
+    # skipping the whole metadata extraction if the file is already processed
+    if not isFileProcessed(fullFileName):
+        yearMatch = re.findall(
+            '/(\d{4})/', fullFileName)
+        monthMatch = re.findall(
+            '/(\d{2})/', fullFileName)
+        fileSize = os.stat(fullFileName).st_size
+        fileHash = hashFile(
+            fullFileName) if mediaType == MediaType.IMAGE else "NA"
+        mycursor = mydb.cursor()
+        sql = "insert ignore into mediaindex (source,filetype,year,month,filename,fullfilename,filesize,filehash) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+        val = (source, fileType, int(yearMatch[0]), int(
+            monthMatch[0]), fileName, fullFileName, int(fileSize), fileHash)
+        mycursor.execute(sql, val)
+        mydb.commit()
 
 
 def extractMetadata(srcdir, mediaType):
