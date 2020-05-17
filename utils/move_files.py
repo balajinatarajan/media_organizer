@@ -2,6 +2,7 @@ import os
 from enum import Enum
 import MySQLdb
 from shutil import move
+import re
 
 
 imageExtensions = [".JPG", ".jpg", ".jpeg", ".JPEG", ".png", ".PNG"]
@@ -51,6 +52,16 @@ def markvoid(file):
     mydb.commit()
 
 
+def createDateFoldersAndMoveMedia(file):
+    # parse year and month from file name
+    year = re.findall('(\d{4})/\d{2}/', file)
+    month = re.findall('\d{4}/(\d{2})/', file)
+    newDir = destination + year[0] + "/" + month[0]
+    os.makedirs(newDir, exist_ok=True)
+    move(file, newDir)
+    return True
+
+
 def moveFiles(files):
     filesCount = 0
     errorCount = 0
@@ -58,7 +69,7 @@ def moveFiles(files):
         try:
             filesCount += 1
             # print(file[0])
-            move(file[0], destination)
+            createDateFoldersAndMoveMedia(file[0])
             markvoid(file[0])
             if(filesCount > totalFilesToBeProcessed):
                 break
