@@ -13,7 +13,7 @@ class MediaType(Enum):
     VIDEO = 2
 
 
-destination = "F:/NewOrganized/Pictures/"
+destination = "F:/NewOrganized/dupes-discard"
 totalFilesToBeProcessed = 4
 
 # mydb = MySQLdb.Connect(host="192.168.1.28", port=3306, user="root", passwd="Team123!", db="mediaorganizer"
@@ -56,7 +56,7 @@ def moveFiles(files):
                 break
         except:
             errorCount += 1
-    print("Total number of errors: " + errorCount)
+    print("Total number of errors: " + str(errorCount))
 
 
 moveFiles(getDuplicateFilesList())
