@@ -65,5 +65,10 @@ VALUES
     "asdf"
   );
 -- UPDATE QUERIES
-  -- DELETE QUERIES
+ALTER TABLE mediaindex
+ADD
+  COLUMN void varchar(3)
+AFTER
+  filehash;
+-- DELETE QUERIES
 delete from mediaindex drop table mediaindex

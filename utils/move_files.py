@@ -44,6 +44,13 @@ where
     return files
 
 
+def markvoid(file):
+    mycursor = mydb.cursor()
+    mycursor.execute(
+        "UPDATE mediaindex SET void = 'yes' WHERE fullfilename = %s", (file,))
+    mydb.commit()
+
+
 def moveFiles(files):
     filesCount = 0
     errorCount = 0
@@ -52,6 +59,7 @@ def moveFiles(files):
             filesCount += 1
             # print(file[0])
             move(file[0], destination)
+            markvoid(file[0])
             if(filesCount > totalFilesToBeProcessed):
                 break
         except:
