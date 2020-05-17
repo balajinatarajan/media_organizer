@@ -22,8 +22,26 @@ select
   filename
 from mediaindex
 where
-  fullfilename like 'F:/NewOrganized/Pictures\\\\2013\\\\04\\\\IMG_9842.jpg';
--- ADD QUERIES
+  fullfilename like 'F:/NewOrganized/Pictures/2013/04/IMG_9842.jpg';
+select
+  count(*)
+from mediaindex
+where
+  source = "Stage"
+  and filetype = "Image"
+  and filehash in (
+    select
+      filehash
+    from mediaindex
+    where
+      source = "Live"
+  )
+select
+  count(*)
+from mediaindex
+where
+  source = "Stage"
+  and filetype = "Image" -- ADD QUERIES
   -- Insert test data
 insert ignore into mediaindex (
     source,
