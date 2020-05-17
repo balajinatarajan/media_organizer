@@ -17,8 +17,8 @@ class MediaType(Enum):
     VIDEO = 2
 
 
-source = "Stage"
-totalFilesToBeProcessed = 10
+source = "Live"
+totalFilesToBeProcessed = 100000
 errorCount = 0
 filesCount = 0
 
@@ -27,17 +27,20 @@ mydb = MySQLdb.Connect("localhost", "root", "Team123!", "mediaorganizer"
 
 
 def hashFile(file):
-    hashes = []
-    img = Image.open(file)
-    # hash the image 4 times and rotate it by 90 degrees each time
-    for angle in [0, 90, 180, 270]:
-        if angle > 0:
-            turned_img = img.rotate(angle, expand=True)
-        else:
-            turned_img = img
-        hashes.append(str(imagehash.phash(turned_img)))
-    hashes = ''.join(sorted(hashes))
-    return hashes
+    try:
+        hashes = []
+        img = Image.open(file)
+        # hash the image 4 times and rotate it by 90 degrees each time
+        for angle in [0, 90, 180, 270]:
+            if angle > 0:
+                turned_img = img.rotate(angle, expand=True)
+            else:
+                turned_img = img
+            hashes.append(str(imagehash.phash(turned_img)))
+        hashes = ''.join(sorted(hashes))
+        return hashes
+    except:
+        return "Error"
 
 
 def isFileProcessed(fullFileName):
@@ -88,17 +91,19 @@ def extractMetadata(srcdir, mediaType):
                 if any(s in fileName for s in fileExtensions):
                     try:
                         filesCount = filesCount + 1
+                        #if filesCount > 20088:
+                            #print(fullFileName)
                         storeMetadata(fileName, fullFileName, mediaType)
                     except Exception as e:
                         errorCount = errorCount + 1
                         print("Error extracting metadata " +
                               fileName + " with error " + e)
                         #print("Error extracting metadata " + fullFileName)
-        if(filesCount % 200 == 0):
+        if(filesCount % 1000 == 0):
             print("Total files processed: " + str(filesCount))
         if (filesCount == totalFilesToBeProcessed):
             break
     print("Total number of errors: " + str(errorCount))
 
 
-extractMetadata("F:/NewOrganized/Pictures", MediaType.IMAGE)
+extractMetadata("F:/ALL_MEDIA/Pictures", MediaType.IMAGE)
