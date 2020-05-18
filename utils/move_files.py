@@ -24,7 +24,7 @@ mydb = MySQLdb.Connect(host="localhost", user="root", passwd="Team123!", db="med
                        )
 
 
-def getDuplicateFilesList():
+def getDuplicateImageFilesList():
     mycursor = mydb.cursor()
     mycursor.execute(
         """select
@@ -41,6 +41,25 @@ where
       source = "Live"
       and filetype="Image"
   )""")
+    files = mycursor.fetchall()
+    return files
+
+
+def getDuplicateVideoFilesList():
+    mycursor = mydb.cursor()
+    mycursor.execute("""
+    select m1.fullfilename
+    from mediaindex m1,mediaindex m2
+    where
+    m1.filetype = "Video"
+    and m2.filetype = "Video"
+    and m1.source = "Stage"
+    and m2.source = "Live"
+    and m1.void is NULL
+    and m2.void is NULL
+    and m1.filesize = m2.filesize
+    and m1.filename = m2.filename
+  """)
     files = mycursor.fetchall()
     return files
 
@@ -78,4 +97,8 @@ def moveFiles(files):
     print("Total number of errors: " + str(errorCount))
 
 
-moveFiles(getDuplicateFilesList())
+# Image
+moveFiles(getDuplicateImageFilesList())
+
+# Video
+moveFiles(getDuplicateVideoFilesList())

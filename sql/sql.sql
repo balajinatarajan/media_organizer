@@ -7,12 +7,15 @@ create table mediaindex (
   fullfilename varchar(300),
   filesize bigint,
   filehash varchar(255),
+  void varchar(3),
   PRIMARY KEY (fullfilename)
 );
 -- READ QUERIES
 select
   count(*)
-from mediaindex;
+from mediaindex
+where
+  void is NULL;
 select
   *
 from mediaindex
@@ -23,19 +26,41 @@ select
 from mediaindex
 where
   fullfilename like 'F:/NewOrganized/Pictures/2013/04/IMG_9842.jpg';
+-- GET DUPLICATE IMAGES
 select
   count(*)
 from mediaindex
 where
   source = "Stage"
   and filetype = "Image"
+  and void = NULL
   and filehash in (
     select
       filehash
     from mediaindex
     where
       source = "Live"
-  )
+  ) -- GET DUPLICATE VIDEOS
+select
+  m1.fullfilename
+from mediaindex m1,
+  mediaindex m2
+where
+  m1.filetype = "Video"
+  and m2.filetype = "Video"
+  and m1.source = "Stage"
+  and m2.source = "Live"
+  and m1.void is NULL
+  and m2.void is NULL
+  and m1.filesize = m2.filesize
+  and m1.filename = m2.filename
+select
+  count(*)
+from mediaindex
+where
+  filetype = "Video"
+  and void is null
+  and source = "Stage"
 select
   count(*)
 from mediaindex
