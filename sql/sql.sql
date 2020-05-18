@@ -33,14 +33,25 @@ from mediaindex
 where
   source = "Stage"
   and filetype = "Image"
-  and void = NULL
   and filehash in (
     select
       filehash
     from mediaindex
     where
       source = "Live"
-  ) -- GET DUPLICATE VIDEOS
+  )
+select
+  count(*)
+from mediaindex m1,
+  mediaindex m2
+where
+  m1.filetype = "Image"
+  and m2.filetype = "Image"
+  and m1.source = "Stage"
+  and m2.source = "Live"
+  and m1.filehash = m2.filehash
+  and m1.year = m2.year
+  and m1.month = m2.month -- GET DUPLICATE VIDEOS
 select
   m1.fullfilename
 from mediaindex m1,
