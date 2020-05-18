@@ -14,8 +14,8 @@ class MediaType(Enum):
     VIDEO = 2
 
 
-destination = "F:/NewOrganized/dupes-discard"
-totalFilesToBeProcessed = 4
+destination = "F:/NewOrganized/dupes-discard/"
+totalFilesToBeProcessed = 40000
 
 # mydb = MySQLdb.Connect(host="192.168.1.28", port=3306, user="root", passwd="Team123!", db="mediaorganizer"
 #                        )
@@ -33,6 +33,7 @@ from mediaindex
 where
   source = "Stage"
   and filetype = "Image"
+  and void = NULL
   and filehash in (
     select
       filehash
