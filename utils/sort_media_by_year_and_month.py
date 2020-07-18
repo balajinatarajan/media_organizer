@@ -16,9 +16,9 @@ class MediaType(Enum):
     VIDEO = 2
 
 
-destination = "F:/NewOrganized/Pictures/"
-errorDestination = "F:/NewOrganized/Pictures/erroredimages"
-totalFilesToBeProcessed = 40000
+destination = "G:/sorted/videos/"
+errorDestination = "G:/sorted/erroredvideos"
+totalFilesToBeProcessed = 4000
 errorCount = 0
 filesCount = 0
 
@@ -82,5 +82,5 @@ def organizeMediaByDateFolders(srcdir, mediaType):
                 break
 
 
-organizeMediaByDateFolders("F:/Unsorted", MediaType.IMAGE)
+organizeMediaByDateFolders("G:/unsorted", MediaType.VIDEO)
 print("Total number of errors: " + str(errorCount))

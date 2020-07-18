@@ -14,8 +14,8 @@ class MediaType(Enum):
     VIDEO = 2
 
 
-destination = "F:/NewOrganized/dupes-discard/"
-totalFilesToBeProcessed = 40000
+destination = "F:/NewOrganized/dupes-discard/Videos/"
+totalFilesToBeProcessed = 10000
 
 # mydb = MySQLdb.Connect(host="192.168.1.28", port=3306, user="root", passwd="Team123!", db="mediaorganizer"
 #                        )

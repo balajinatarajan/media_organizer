@@ -16,4 +16,4 @@ def deleteEmptyDirsRecursively(dirName):
 
 
 if __name__ == '__main__':
-    deleteEmptyDirsRecursively('/Users/bala/tmp')
+    deleteEmptyDirsRecursively('F:/NewOrganized/Pictures')

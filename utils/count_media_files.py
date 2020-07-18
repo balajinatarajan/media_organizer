@@ -21,12 +21,13 @@ def countFilesRecursively(srcdir, count):
                     fileSize = os.stat(fullFileName).st_size
                     if(fileSize > fileSizeLowerLimit):
                         count = count + 1
+                        print(fullFileName)
                 except:
                     errorCount = errorCount + 1
     return count
 
 
-src = "F:/Unsorted"
+src = "G:/unsorted"
 count = countFilesRecursively(src, 0)
 print("Total media: " + str(count))
 print("Total errors: " + str(errorCount))
